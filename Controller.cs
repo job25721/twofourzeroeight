@@ -8,6 +8,7 @@ namespace twozerofoureight
 {
     class Controller
     {
+        
         protected ArrayList mList;
 
         public Controller()
@@ -23,7 +24,8 @@ namespace twozerofoureight
         // virtual keyword allow the method to be overriden
         public virtual void ActionPerformed(int action)
         {
-            throw new NotImplementedException();
+           
         }
+       
     }
 }

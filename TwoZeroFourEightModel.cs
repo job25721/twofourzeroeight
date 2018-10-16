@@ -11,25 +11,46 @@ namespace twozerofoureight
         protected int boardSize; // default is 4
         protected int[,] board;
         protected Random rand;
+        protected int score = 0;
+        protected bool Over;
+        protected string g = "2048 GAME";
+
+
 
         public TwoZeroFourEightModel() : this(4)
         {
+
             // default board size is 4 
         }
 
+        public string StatusText()
+        {
+            return g;
+        }
+        public string GetScore()
+        {
+            return (score).ToString();
+        }
         public int[,] GetBoard()
         {
+
             return board;
         }
+
+
+
+
 
         public TwoZeroFourEightModel(int size)
         {
             boardSize = size;
             board = new int[boardSize, boardSize];
             var range = Enumerable.Range(0, boardSize);
-            foreach(int i in range) {
-                foreach(int j in range) {
-                    board[i,j] = 0;
+            foreach (int i in range)
+            {
+                foreach (int j in range)
+                {
+                    board[i, j] = 0;
                 }
             }
             rand = new Random();
@@ -39,17 +60,79 @@ namespace twozerofoureight
 
         private int[,] Random(int[,] input)
         {
+
+
             while (true)
             {
+
                 int x = rand.Next(boardSize);
                 int y = rand.Next(boardSize);
+
                 if (board[x, y] == 0)
                 {
+
                     board[x, y] = 2;
                     break;
                 }
+                else if (board[x, y] != 0)
+                {
+                    //check all block
+                    int checkfull = 0;
+                    int[,] check;
+                    check = GetBoard();
+                    var range = Enumerable.Range(0, boardSize);
+                    foreach (int i in range)
+                    {
+                        foreach (int j in range)
+                        {
+                            if (check[i, j] != 0)
+                            {
+
+                                checkfull++;
+                            }
+
+                        }
+                    }
+
+                    //if all block full
+                    if (checkfull == 16)
+                    {
+                        //check game over
+                        var checkRANGE = Enumerable.Range(0, boardSize);
+                        check = GetBoard();
+                        foreach (int i in checkRANGE)
+                        {
+                            foreach (int j in checkRANGE)
+                            {
+                                try
+                                {
+                                    if (check[i, j] == check[i, j - 1] || check[i, j] == check[i, j + 1] || check[i, j] == check[i - 1, j] || check[i, j] == check[i + 1, j])
+                                    {
+                                        Over = false;
+                                    }
+                                    else Over = true;
+                                }
+                                catch (IndexOutOfRangeException)
+                                {
+                                    //do nothing
+                                }
+
+
+                            }
+                        }
+                        //check if over print "GAME OVER"
+                        if (Over == true) g = "GAME OVER";
+
+                        break;
+
+
+
+                    }
+
+                }
             }
             return input;
+
         }
 
         public void PerformDown()
@@ -82,7 +165,9 @@ namespace twozerofoureight
                     if (j > 0 && buffer[j] != 0 && buffer[j] == buffer[j - 1])
                     {
                         buffer[j - 1] *= 2;
+                        score += buffer[j - 1];
                         buffer[j] = 0;
+
                     }
                 }
                 // shift left again
@@ -102,6 +187,7 @@ namespace twozerofoureight
                 }
             }
             board = Random(board);
+
             NotifyAll();
         }
 
@@ -134,8 +220,11 @@ namespace twozerofoureight
                     if (j > 0 && buffer[j] != 0 && buffer[j] == buffer[j - 1])
                     {
                         buffer[j - 1] *= 2;
+                        score += buffer[j - 1];
+
                         buffer[j] = 0;
                     }
+
                 }
                 // shift left again
                 pos = 0;
@@ -188,6 +277,8 @@ namespace twozerofoureight
                     if (j > 0 && buffer[j] != 0 && buffer[j] == buffer[j - 1])
                     {
                         buffer[j - 1] *= 2;
+                        score += buffer[j - 1];
+
                         buffer[j] = 0;
                     }
                 }
@@ -239,6 +330,9 @@ namespace twozerofoureight
                     if (j > 0 && buffer[j] != 0 && buffer[j] == buffer[j - 1])
                     {
                         buffer[j - 1] *= 2;
+
+                        score += buffer[j - 1];
+
                         buffer[j] = 0;
                     }
                 }
@@ -260,5 +354,14 @@ namespace twozerofoureight
             board = Random(board);
             NotifyAll();
         }
-    }
+
+
+
+
+
+
+
+
+    }//class
 }
+

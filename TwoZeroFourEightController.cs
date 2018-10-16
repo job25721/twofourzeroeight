@@ -12,6 +12,7 @@ namespace twozerofoureight
         public const int RIGHT = 1;
         public const int UP = 2;
         public const int DOWN = 3;
+        
 
         public TwoZeroFourEightController()
         {
@@ -36,6 +37,7 @@ namespace twozerofoureight
                     case DOWN:
                         m.PerformDown();
                         break;
+                    
                 }
 
             }
