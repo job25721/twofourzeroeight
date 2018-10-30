@@ -12,7 +12,7 @@ namespace twozerofoureight
         protected int[,] board;
         protected Random rand;
         protected int score = 0;
-        protected bool Over;
+        
         protected string g = "2048 GAME";
 
 
@@ -76,7 +76,7 @@ namespace twozerofoureight
                 }
                 else if (board[x, y] != 0)
                 {
-                    //check all block
+                    //check all block is full?
                     int checkfull = 0;
                     int[,] check;
                     check = GetBoard();
@@ -97,44 +97,64 @@ namespace twozerofoureight
                     //if all block full
                     if (checkfull == 16)
                     {
-                        //check game over
-                        var checkRANGE = Enumerable.Range(0, boardSize);
-                        check = GetBoard();
-                        foreach (int i in checkRANGE)
-                        {
-                            foreach (int j in checkRANGE)
-                            {
-                                try
-                                {
-                                    if (check[i, j] == check[i, j - 1] || check[i, j] == check[i, j + 1] || check[i, j] == check[i - 1, j] || check[i, j] == check[i + 1, j])
-                                    {
-                                        Over = false;
-                                    }
-                                    else Over = true;
-                                }
-                                catch (IndexOutOfRangeException)
-                                {
-                                    //do nothing
-                                }
-
-
-                            }
-                        }
+                        //bool check row and columm
+                        bool r,c;
+                        r = row();
+                        c = col();
                         //check if over print "GAME OVER"
-                        if (Over == true) g = "GAME OVER";
-
+                        if (r==false && c==false ) g = "GAME OVER";
                         break;
-
-
-
                     }
-
                 }
             }
             return input;
 
         }
 
+        public bool row(){
+               bool canbreak=false;
+              int[,] check;
+              check = GetBoard();
+                for(int i=0 ;i<boardSize;i++){
+                    for(int j=0 ;j<boardSize-1;j++){
+                        if(check[j,i]==check[j+1,i]){
+                            canbreak=true;
+                            break;
+                        }    
+                    }
+                    if(canbreak==true) break;
+                }
+
+                if(canbreak==true) return true;
+                else return false;
+            
+        }
+        
+        public bool col(){
+               bool canbreak=false;
+               int[,] check;
+               check = GetBoard();
+                for(int i=0 ;i<boardSize;i++){
+                    for(int j=0 ;j<boardSize-1;j++){
+                        if(check[i,j]==check[i,j+1]){
+                            canbreak=true;
+                            break;
+                        }    
+
+
+
+                    }
+                    if(canbreak==true) break;
+
+                }
+
+                 
+                if(canbreak==true) return true;
+                else return false;
+            
+        }
+
+        
         public void PerformDown()
         {
             int[] buffer;
